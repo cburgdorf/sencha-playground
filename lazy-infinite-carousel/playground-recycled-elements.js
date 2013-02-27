@@ -65,6 +65,8 @@ Ext.application({
         //our array of values that we want to circle through *lazily*
         var values = [1,2,3,4,5,6,7,8,9];
 
+        //a cache for carousel items to be recycled
+        var itemCache = [];
 
         //wrap the values in our CircleStore abstraction
         var wrappedValues = new CircleStore(values);
@@ -72,11 +74,12 @@ Ext.application({
         //we want to start at the middle (number 5)
         wrappedValues.setIndex(4);
 
+
         //retrieves an item from our source
         var getItem = function(position){
             return position === 'actual' ? wrappedValues.getValue() :
-                position === 'next' ? wrappedValues.getAtNext() :
-                    wrappedValues.getAtPrevious();
+                   position === 'next' ? wrappedValues.getAtNext() :
+                   wrappedValues.getAtPrevious();
         };
 
         //a little helper function to create a new carousel item that will either
@@ -89,11 +92,28 @@ Ext.application({
             });
         };
 
+        //creates an carousel item by either recycling an old one or creating
+        //a new one
+        var createAtWithCaching = function(position){
+
+            var item = itemCache.pop();
+
+            if (item){
+                item.setHtml('<span class="cc-carousel-number">' + getItem(position) + '</span>');
+            }
+
+            if (!item){
+                item = createAt(position);
+
+            }
+            return item;
+        };
+
         //create an instance of the LazyCarousel
         me._carousel = Ext.create('Ext.carousel.LazyCarousel', {
             fullscreen: true,
             direction: 'horizontal',
-
+            autoDestroy: false,
             defaults: {
                 styleHtmlContent: true
             },
@@ -119,11 +139,15 @@ Ext.application({
         //the LazyCarousel raises events when we need to put new items at the
         //head or tail of our carousel. That's what we do then..
         me._carousel.on('headneeded', function(){
-            me._carousel.insertHead(createAt('next'));
+            me._carousel.insertHead(createAtWithCaching('next'));
         });
 
         me._carousel.on('tailneeded', function(){
-            me._carousel.insertTail(createAt('previous'));
+            me._carousel.insertTail(createAtWithCaching('previous'));
+        });
+
+        me._carousel.on('itemremoved', function(origin, headOrTail, item){
+            itemCache.push(item);
         });
 
     }

@@ -49,6 +49,7 @@ Ext.define('Ext.carousel.LazyCarousel', {
 
         if (item){
             me.remove(item);
+            me.fireEvent('itemremoved', me, tailOrHead, item);
         }
 
         return item;
