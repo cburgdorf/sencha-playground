@@ -110,7 +110,7 @@ Ext.application({
         };
 
         //create an instance of the LazyCarousel
-        me._carousel = Ext.create('Ext.carousel.LazyCarousel', {
+        me._carousel = Ext.create('CouchCommerce.view.LazyCarousel', {
             fullscreen: true,
             direction: 'horizontal',
             autoDestroy: false,

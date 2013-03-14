@@ -3,7 +3,7 @@
 //entries from the DOM again. Notice, that the carousel at this point is a very
 //early rough draft and misses a bunch of probably wanted configurations
 
-Ext.define('Ext.carousel.LazyCarousel', {
+Ext.define('CouchCommerce.view.LazyCarousel', {
     extend: 'Ext.carousel.Carousel',
 
     xtype: 'lazycarousel',
