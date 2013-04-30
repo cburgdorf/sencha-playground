@@ -38,9 +38,8 @@ Ext.define('CouchCommerce.view.LazyCarousel', {
         var activeIndex = me.getActiveIndex();
 
         //don't remove items if the active item is too close to the start/end
-        //Todo make that configureable
-        if (tailOrHead === 'tail' && activeIndex === 1 ||
-            tailOrHead === 'head' && activeIndex === me.innerItems.length - 2){
+        if (tailOrHead === 'tail' && activeIndex < me.innerItems.length/2 ||
+            tailOrHead === 'head' && (me.innerItems.length-1) - activeIndex < me.innerItems.length/2){
             return;
         }
 
