@@ -47,11 +47,13 @@ Ext.define('CouchCommerce.view.LazyCarousel', {
             me.innerItems[0] : me.innerItems[me.innerItems.length - 1];
 
         if (item){
-            me.remove(item);
-            me.fireEvent('itemremoved', me, tailOrHead, item);
+            me.fireAction( 'itemremoved', [me, tailOrHead, item], me.doDeleteFrom);
         }
 
         return item;
+    },
+    doDeleteFrom: function( me, tailOrHead, item){
+        me.remove(item);
     },
     insertHead: function(item){
         var me = this;
