@@ -18,13 +18,13 @@ Ext.define('CouchCommerce.view.LazyCarousel', {
             var direction = me.animationDirection;
 
             if (direction === -1){
-                me.deleteFrom('tail');
                 me.fireEvent('movedforward', me);
+                me.deleteFrom('tail');
                 me._raiseIfHeadNeeded();
             }
             else {
-                me.deleteFrom('head');
                 me.fireEvent('movedbackward', me);
+                me.deleteFrom('head');
                 me._raiseIfTailNeeded();
             }
         });
