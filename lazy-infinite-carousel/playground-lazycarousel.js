@@ -18,13 +18,13 @@ Ext.define('CouchCommerce.view.LazyCarousel', {
             var direction = me.animationDirection;
 
             if (direction === -1){
-                me.deleteFrom('tail');
                 me.fireEvent('movedforward', me);
+                me.deleteFrom('tail');
                 me._raiseIfHeadNeeded();
             }
             else {
-                me.deleteFrom('head');
                 me.fireEvent('movedbackward', me);
+                me.deleteFrom('head');
                 me._raiseIfTailNeeded();
             }
         });
@@ -38,9 +38,8 @@ Ext.define('CouchCommerce.view.LazyCarousel', {
         var activeIndex = me.getActiveIndex();
 
         //don't remove items if the active item is too close to the start/end
-        //Todo make that configureable
-        if (tailOrHead === 'tail' && activeIndex === 1 ||
-            tailOrHead === 'head' && activeIndex === me.innerItems.length - 2){
+        if (tailOrHead === 'tail' && activeIndex < me.innerItems.length/2 ||
+            tailOrHead === 'head' && (me.innerItems.length-1) - activeIndex < me.innerItems.length/2){
             return;
         }
 
@@ -48,11 +47,13 @@ Ext.define('CouchCommerce.view.LazyCarousel', {
             me.innerItems[0] : me.innerItems[me.innerItems.length - 1];
 
         if (item){
-            me.remove(item);
-            me.fireEvent('itemremoved', me, tailOrHead, item);
+            me.fireAction( 'itemremoved', [me, tailOrHead, item], me.doDeleteFrom);
         }
 
         return item;
+    },
+    doDeleteFrom: function( me, tailOrHead, item){
+        me.remove(item);
     },
     insertHead: function(item){
         var me = this;
